@@ -1,7 +1,5 @@
 package com.NapierDevSoc.TheDrunkenLeprechaun;
 
-import java.util.*;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -72,9 +70,6 @@ public class DrunkenLeprechaun implements ApplicationListener {
 
 	@Override
 	public void render() {
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
@@ -93,9 +88,6 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	}
 	
 	private void animateLeprechaun(float y_offset) {
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-		
 		leprechaun.y += y_offset;
 		
 		if (leprechaun.y <= 0)
@@ -115,7 +107,6 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	
 	private void animatePavement(float x_offset) {
 		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
 		
 		for (int y=0; y < pavement.length; y++) {
 			for (int x=0; x < pavement[y].length; x++) {
