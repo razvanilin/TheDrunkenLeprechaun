@@ -2,6 +2,7 @@ package com.NapierDevSoc.TheDrunkenLeprechaun;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,6 +12,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class DrunkenLeprechaun implements ApplicationListener {
+	
+	public static final int GAME_STATE_PLAY = 0;
+	public static final int GAME_STATE_PAUSE = 1;
+	public static final int GAME_STATE_ANIMATE = 2;
+	
+	public Screen screen;
+	
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Texture texture;
@@ -24,7 +32,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
 		
-		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
+		texture = new Texture(Gdx.files.internal("data/Rainbow_Leprechaun.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);
