@@ -35,16 +35,9 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
-		// Leprechaun Variable
-		leprechaun = new Rectangle();
-		leprechaun.width = 80;
-		leprechaun.height = 80;
-		leprechaun.x = 150 - leprechaun.width/2;
-		leprechaun.y = 150 - leprechaun.height/2;
-		leprechaunTexture = new Texture(Gdx.files.internal("data/Hat.png"));
-		
 		// Pavement variables
 		int pavementSlabSize = 100;
+		float pavementOffset = w/2;
 		pavement = new Rectangle[(int) h/pavementSlabSize + 2][3];
 		pavementTexture = new Texture(Gdx.files.internal("data/sidewalk_block_128x128.png"));
 		
@@ -53,10 +46,18 @@ public class DrunkenLeprechaun implements ApplicationListener {
 				pavement[y][x] = new Rectangle();
 				pavement[y][x].width = pavementSlabSize;
 				pavement[y][x].height = pavementSlabSize;
-				pavement[y][x].x = pavementSlabSize * x;
+				pavement[y][x].x = (pavementOffset - pavement[y].length * pavementSlabSize / 2) + pavementSlabSize * x;
 				pavement[y][x].y = pavementSlabSize * y;
 			}
 		}
+
+		// Leprechaun Variable
+		leprechaun = new Rectangle();
+		leprechaun.width = 80;
+		leprechaun.height = 80;
+		leprechaun.x = pavement[0][0].x + (pavement[0].length * pavementSlabSize / 2) - leprechaun.width/2;
+		leprechaun.y = 150 - leprechaun.height/2;
+		leprechaunTexture = new Texture(Gdx.files.internal("data/Hat.png"));
 		
 		camera = new OrthographicCamera(1, h/w);
 		
