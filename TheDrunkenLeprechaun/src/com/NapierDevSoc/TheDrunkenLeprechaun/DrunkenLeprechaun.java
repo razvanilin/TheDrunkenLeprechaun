@@ -23,6 +23,9 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	private Rectangle[][] pavement;
 	private Texture pavementTexture;
 	
+	private Rectangle leprechaun;
+	private Texture leprechaunTexture;
+	
 	public Screen screen;
 	
 	private OrthographicCamera camera;
@@ -34,6 +37,15 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
+		// Leprechaun Variable
+		leprechaun = new Rectangle();
+		leprechaun.width = 80;
+		leprechaun.height = 80;
+		leprechaun.x = w/2 - leprechaun.width/2;
+		leprechaun.y = 150 - leprechaun.height/2;
+		leprechaunTexture = new Texture(Gdx.files.internal("data/Hat.png"));
+		
+		// Pavement variables
 		int pavementSlabSize = 100;
 		pavement = new Rectangle[3][(int)(w/pavementSlabSize + 1)];
 		pavementTexture = new Texture(Gdx.files.internal("data/sidewalk_block_128x128.png"));
@@ -63,17 +75,42 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
 		
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animatePavement(100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) animatePavement(100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
+		
+		if (Gdx.input.isKeyPressed(Keys.UP)) animateLeprechaun(100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) animateLeprechaun(-100 * Gdx.graphics.getDeltaTime());
 		
 		drawPavement();
+		drawLeprechaun();
 		
 		batch.end();
+	}
+	
+	private void animateLeprechaun(float y_offset) {
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+		
+		leprechaun.y += y_offset;
+		
+		if (leprechaun.y <= 0)
+			leprechaun.y = 0;
+		if (leprechaun.y + leprechaun.height >= pavement[pavement.length-1][0].y + pavement[pavement.length-1][0].height)
+			leprechaun.y = pavement[pavement.length-1][0].y + pavement[pavement.length-1][0].height - leprechaun.height;
+		
+	}
+	
+	private void drawLeprechaun() {
+		batch.draw(leprechaunTexture,
+				leprechaun.x,
+				leprechaun.y,
+				leprechaun.width,
+				leprechaun.height);
 	}
 	
 	private void animatePavement(float x_offset) {
