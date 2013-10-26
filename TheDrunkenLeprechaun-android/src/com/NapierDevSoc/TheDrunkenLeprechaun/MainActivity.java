@@ -11,8 +11,9 @@ public class MainActivity extends AndroidApplication {
         super.onCreate(savedInstanceState);
         
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-        cfg.useGL20 = false;
+        cfg.useAccelerometer = false;
+        cfg.useCompass = false;
         
-        initialize(new DrunkenLeprechaun(), cfg);
+        initialize(new Drop(), cfg);
     }
 }
