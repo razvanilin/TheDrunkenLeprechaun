@@ -58,9 +58,9 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		obstacleSpeed = new int[] {200, 100};
 		
 		// Pavement variables
-		int pavementSlabSize = 100;
+		int pavementSlabSize = 80;
 		float pavementOffset = w/2;
-		pavement = new Rectangle[(int) h/pavementSlabSize + 2][3];
+		pavement = new Rectangle[(int) h/pavementSlabSize + 2][4];
 		pavementTexture = new Texture(Gdx.files.internal("data/sidewalk_block_128x128.png"));
 		
 		for (int y=0; y < pavement.length; y++) {
@@ -75,8 +75,8 @@ public class DrunkenLeprechaun implements ApplicationListener {
 
 		// Leprechaun Variable
 		leprechaun = new Rectangle();
-		leprechaun.width = 80;
-		leprechaun.height = 80;
+		leprechaun.width = 60;
+		leprechaun.height = 60;
 		leprechaun.x = pavement[0][0].x + (pavement[0].length * pavementSlabSize / 2) - leprechaun.width/2;
 		leprechaun.y = 150 - leprechaun.height/2;
 		leprechaunTexture = new Texture(Gdx.files.internal("data/Hat.png"));
