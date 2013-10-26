@@ -68,27 +68,41 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		
 		batch.begin();
 		
-		animate_pavement();
+		animate_pavement(-100 * Gdx.graphics.getDeltaTime());
 		
 		batch.end();
 	}
 	
-	private void animate_pavement() {
+	private void animate_pavement(float x_offset) {
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+		
 		for (int y=0; y < pavement.length; y++) {
 			for (int x=0; x < pavement[y].length; x++) {
-				// Move pavement slabs left
-				pavement[y][x].x -= 100 * Gdx.graphics.getDeltaTime();
+				// Move pavement slabs
+				pavement[y][x].x += x_offset;
 				
 				
-				// If the fist slab is off the screen, change the x value to the end.
-				if (pavement[y][x].x + pavement[y][x].width <= 0) {
-					int max_x = 0;
+				//For right to left
+				if (x_offset < 0 && pavement[y][x].x + pavement[y][x].width <= 0) {
+					int x_max = 0;
 					for (int xx=0; xx <  pavement[y].length; xx++) {
-						if (pavement[y][max_x].x < pavement[y][xx].x)
-							max_x = xx;
+						if (pavement[y][x_max].x < pavement[y][xx].x)
+							x_max = xx;
 					}
 					
-					pavement[y][x].x = pavement[y][max_x].x + pavement[y][max_x].width + (x == 0 ? -2 : 0);
+					pavement[y][x].x = pavement[y][x_max].x + pavement[y][x_max].width + (x == 0 ? -2 : 0);
+				}
+				
+				// For left to right
+				if (x_offset > 0 && pavement[y][x].x >= w) {
+					int x_min = 0;
+					for (int xx=0; xx <  pavement[y].length; xx++) {
+						if (pavement[y][x_min].x > pavement[y][xx].x)
+							x_min = xx;
+					}
+					
+					pavement[y][x].x = pavement[y][x_min].x - pavement[y][x].width + (x == pavement[y].length-1 ? 0 : 2);
 				}
 				
 				
