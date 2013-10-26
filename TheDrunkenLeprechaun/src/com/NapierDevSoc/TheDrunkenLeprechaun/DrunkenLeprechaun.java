@@ -1,5 +1,7 @@
 package com.NapierDevSoc.TheDrunkenLeprechaun;
 
+import java.util.*;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class DrunkenLeprechaun implements ApplicationListener {
 	
@@ -22,11 +25,14 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	public static final int GAME_STATE_PAUSE = 1;
 	public static final int GAME_STATE_ANIMATE = 2;
 	
+	
+	ArrayList<ArrayList<Rectangle>> pavement = new ArrayList<ArrayList<Rectangle>>();
+	
 	public Screen screen;
 	
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Rectangle leprechaun;
+	private Rectangle pavementSlab;
 	
 	private ShapeRenderer shapeRenderer;
 	
@@ -35,17 +41,30 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
+
+		
+		
+		for (int i=0; i <= h/100; i++) {
+			ArrayList<Rectangle> pavementX = new ArrayList<Rectangle>();
+			
+			for (int ii=0; ii <= w/100; ii++) {
+				pavementSlab = new Rectangle();
+				pavementSlab.width = 100;
+				pavementSlab.height = 100;
+				pavementSlab.x = 100 * ii + (1*ii);
+				pavementSlab.y = 100 * i + (1*i);
+
+				pavementX.add(ii, pavementSlab);
+			}
+			pavement.add(i, pavementX);
+		}
+		
+		
 		camera = new OrthographicCamera(1, h/w);
 		
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		
-		// Create leprechaun rectangle & center it
-		leprechaun = new Rectangle();
-		leprechaun.width = 64;
-		leprechaun.height = 64;
-		leprechaun.x = w / 2 - leprechaun.width / 2;
-		leprechaun.y = h / 2 - leprechaun.height / 2;
 	}
 
 	@Override
@@ -63,23 +82,15 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		batch.begin();
 		shapeRenderer.begin(ShapeType.FilledRectangle);
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.filledRect(leprechaun.x, leprechaun.y, leprechaun.width, leprechaun.height);
+        
+        for (int i=0; i<pavement.size(); i++) {
+        	for (int ii=0; ii<pavement.get(i).size(); ii++) {
+        		shapeRenderer.filledRect(pavement.get(i).get(ii).x, pavement.get(i).get(ii).y, pavement.get(i).get(ii).width, pavement.get(i).get(ii).height);
+        	}
+        }
+        
         shapeRenderer.end();
-        // Once we have a leprechaun image, the shapeRenderer can be replaced with the below.
-		//batch.draw(leprechaunImage, leprechaun.x, leprechaun.y);
 		batch.end();
-		
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) leprechaun.x -= 200 * Gdx.graphics.getDeltaTime();
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) leprechaun.x += 200 * Gdx.graphics.getDeltaTime();
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) leprechaun.y -= 200 * Gdx.graphics.getDeltaTime();
-		if (Gdx.input.isKeyPressed(Keys.UP)) leprechaun.y += 200 * Gdx.graphics.getDeltaTime();
-		
-		
-		leprechaun.x = (leprechaun.x < 0 ? 0 : leprechaun.x);
-		leprechaun.x = (leprechaun.x > w - leprechaun.width ? w - leprechaun.width : leprechaun.x);
-		leprechaun.y = (leprechaun.y < 0 ? 0 : leprechaun.y);
-		leprechaun.y = (leprechaun.y > h - leprechaun.height ? h - leprechaun.height : leprechaun.y);
-		
 	}
 
 	@Override
