@@ -1,7 +1,5 @@
 package com.NapierDevSoc.TheDrunkenLeprechaun;
 
-import java.util.Date;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -28,7 +26,6 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	
 	private int[] leprechaunSpeed;
 	private int[] obstacleSpeed;
-	private int[] drunkMovementsSpeed;
 	
 	private int level;
 	
@@ -48,24 +45,17 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	
-	private long DELAY_IN_MILI_SIDES = 200;
-    private long LAST_RANDOM_MOVE_TIME_SIDES = 0;
-    private long RANDOM_MOVE_DIRECTION_SIDES = 0;
-    
-    private long DELAY_IN_MILI_FORWAR_BACK = 300;
-    private long LAST_RANDOM_MOVE_TIME_FORWAR_BACK = 0;
-    private long RANDOM_MOVE_DIRECTION_FORWAR_BACK = 0;
+	
 	@Override
 	public void create() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
-		level = 1;
+		level = 6;
 		
 		// Speeds
-		leprechaunSpeed = new int[] {200, 100};
-		obstacleSpeed = new int[] {200, 100};
-		drunkMovementsSpeed = new int[] {50, 60};
+		leprechaunSpeed = new int[] {150, 140, 130, 120, 110, 100, 90};
+		obstacleSpeed = new int[] {100, 110, 120, 130, 140, 150, 160};
 		
 		// Pavement variables
 		int pavementSlabSize = 80;
@@ -109,20 +99,6 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
-		
-		long curentTime = new Date().getTime();
-
-		if (LAST_RANDOM_MOVE_TIME_SIDES < curentTime - DELAY_IN_MILI_SIDES) {
-			RANDOM_MOVE_DIRECTION_SIDES = getRandomMovementDirection();
-			LAST_RANDOM_MOVE_TIME_SIDES = curentTime;
-		} else
-			animateLeprechaun(RANDOM_MOVE_DIRECTION_SIDES * drunkMovementsSpeed[level] * Gdx.graphics.getDeltaTime());
-
-		if (LAST_RANDOM_MOVE_TIME_FORWAR_BACK < curentTime - DELAY_IN_MILI_FORWAR_BACK) {
-			RANDOM_MOVE_DIRECTION_FORWAR_BACK = getRandomMovementDirection();
-			LAST_RANDOM_MOVE_TIME_FORWAR_BACK = curentTime;
-		} else
-			animatePavement(RANDOM_MOVE_DIRECTION_FORWAR_BACK * drunkMovementsSpeed[level] * Gdx.graphics.getDeltaTime());
 
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) animatePavement(100 * Gdx.graphics.getDeltaTime());
 		if (Gdx.input.isKeyPressed(Keys.UP)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
@@ -130,16 +106,36 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) animateLeprechaun(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animateLeprechaun(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		
+		animateLeprechaun(drunkHorizontalMovement() * Gdx.graphics.getDeltaTime());
+		animatePavement(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
+		
 		drawPavement();
 		drawLeprechaun();
 		
 		batch.end();
 	}
 	
-	private int getRandomMovementDirection(){
-		int Min = -1;
-		int Max = 1;
-		return Min + (int)(Math.random() * ((Max - Min) + 1));
+	
+	private float drunkVerticalPosition = 0;
+	private double drunkVerticalDirection = .5;
+	private float drunkHorizontalPosition = 0;
+	private double drunkHorizontalDirection = .5;
+	
+	private float drunkVerticalMovement() {
+		drunkVerticalPosition += drunkVerticalDirection;
+		if (drunkVerticalPosition > obstacleSpeed[level]/5)
+			drunkVerticalDirection = -1;
+		if (drunkVerticalPosition < -obstacleSpeed[level]/5)
+			drunkVerticalDirection = 1;
+		return drunkVerticalPosition;
+	}
+	private float drunkHorizontalMovement() {
+		drunkHorizontalPosition += drunkHorizontalDirection;
+		if (drunkHorizontalPosition > obstacleSpeed[level]/3)
+			drunkHorizontalDirection = -1;
+		if (drunkHorizontalPosition < -obstacleSpeed[level]/3)
+			drunkHorizontalDirection = 1;
+		return drunkHorizontalPosition;
 	}
 	
 	private void animateLeprechaun(float x_offset) {
@@ -169,7 +165,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 				pavement[y][x].y += y_offset;
 				
 				// For walking forward
-				if (y_offset < 0 && pavement[y][x].y + pavement[y][x].height <= 0) {
+				if (y_offset < 0 && pavement[y][x].y + pavement[y][x].height < 0) {
 					int y_max = 0;
 					for (int yy=0; yy <  pavement.length; yy++) {
 						if (pavement[y_max][x].y < pavement[yy][x].y)
@@ -180,7 +176,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 				}
 				
 				// For walking backward
-				if (y_offset > 0 && pavement[y][x].y >= h) {
+				if (y_offset > 0 && pavement[y][x].y > h) {
 					int y_min = 0;
 					for (int yy=0; yy < pavement.length; yy++) {
 						if (pavement[y_min][x].y > pavement[yy][x].y)
