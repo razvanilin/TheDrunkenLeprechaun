@@ -23,6 +23,9 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	private Rectangle[][] pavement;
 	private Texture pavementTexture;
 	
+	private GrassSides grassSide;
+
+	
 	private Rectangle leprechaun;
 	private Texture leprechaunTexture;
 	
@@ -66,6 +69,26 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		leprechaunSpeed = new int[] {200, 100};
 		obstacleSpeed = new int[] {200, 100};
 		drunkMovementsSpeed = new int[] {50, 60};
+		
+		//grass side variables
+		grassSide = new GrassSides();
+		/*int grassWidth = 250;
+		int grassHeight = 480;
+		grassSide = new Rectangle[2];
+		
+		for (int i=0;i<grassSide.length;i++)
+		{
+			grassSide[i] = new Rectangle();
+			grassSide[i].width = grassWidth;
+			grassSide[i].height = grassHeight;
+			grassSide[i].x = 0;
+			grassSide[i].y = h;
+		}
+		
+		for (int i=0; i<grassSideTexture.length;i++)
+		{
+			grassSideTexture[i] = new Texture(Gdx.files.internal("data/sidesGrass"+i+".png"));
+		}*/
 		
 		// Pavement variables
 		int pavementSlabSize = 80;
@@ -116,25 +139,42 @@ public class DrunkenLeprechaun implements ApplicationListener {
 			RANDOM_MOVE_DIRECTION_SIDES = getRandomMovementDirection();
 			LAST_RANDOM_MOVE_TIME_SIDES = curentTime;
 		} else
+		{
 			animateLeprechaun(RANDOM_MOVE_DIRECTION_SIDES * drunkMovementsSpeed[level] * Gdx.graphics.getDeltaTime());
-
+		}
+			
 		if (LAST_RANDOM_MOVE_TIME_FORWAR_BACK < curentTime - DELAY_IN_MILI_FORWAR_BACK) {
 			RANDOM_MOVE_DIRECTION_FORWAR_BACK = getRandomMovementDirection();
 			LAST_RANDOM_MOVE_TIME_FORWAR_BACK = curentTime;
 		} else
+		{
 			animatePavement(RANDOM_MOVE_DIRECTION_FORWAR_BACK * drunkMovementsSpeed[level] * Gdx.graphics.getDeltaTime());
-
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) animatePavement(100 * Gdx.graphics.getDeltaTime());
-		if (Gdx.input.isKeyPressed(Keys.UP)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
+			grassSide.animateGrass(RANDOM_MOVE_DIRECTION_FORWAR_BACK * drunkMovementsSpeed[level] * Gdx.graphics.getDeltaTime());
+		}
+			
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) 
+			{
+				animatePavement(100 * Gdx.graphics.getDeltaTime());
+				grassSide.animateGrass(100 * Gdx.graphics.getDeltaTime());
+			}
+		if (Gdx.input.isKeyPressed(Keys.UP))
+			{
+				animatePavement(-100 * Gdx.graphics.getDeltaTime());
+				grassSide.animateGrass(-100 * Gdx.graphics.getDeltaTime());
+			}
 		
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) animateLeprechaun(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animateLeprechaun(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		
+		
+		grassSide.drawGrass(batch);
 		drawPavement();
 		drawLeprechaun();
 		
 		batch.end();
 	}
+	
+	//METHODS
 	
 	private int getRandomMovementDirection(){
 		int Min = -1;
