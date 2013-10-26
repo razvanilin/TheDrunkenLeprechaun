@@ -39,16 +39,16 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		leprechaun = new Rectangle();
 		leprechaun.width = 80;
 		leprechaun.height = 80;
-		leprechaun.x = w/2 - leprechaun.width/2;
+		leprechaun.x = 150 - leprechaun.width/2;
 		leprechaun.y = 150 - leprechaun.height/2;
 		leprechaunTexture = new Texture(Gdx.files.internal("data/Hat.png"));
 		
 		// Pavement variables
 		int pavementSlabSize = 100;
-		pavement = new Rectangle[3][(int)(w/pavementSlabSize + 1)];
+		pavement = new Rectangle[(int) h/pavementSlabSize + 2][3];
 		pavementTexture = new Texture(Gdx.files.internal("data/sidewalk_block_128x128.png"));
 		
-		for (int y=0; y < 3; y++) {
+		for (int y=0; y < pavement.length; y++) {
 			for (int x=0; x < pavement[y].length; x++) {
 				pavement[y][x] = new Rectangle();
 				pavement[y][x].width = pavementSlabSize;
@@ -77,11 +77,11 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		
 		batch.begin();
 		
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) animatePavement(100 * Gdx.graphics.getDeltaTime());
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) animatePavement(100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.UP)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
 		
-		if (Gdx.input.isKeyPressed(Keys.UP)) animateLeprechaun(100 * Gdx.graphics.getDeltaTime());
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) animateLeprechaun(-100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) animateLeprechaun(-100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animateLeprechaun(100 * Gdx.graphics.getDeltaTime());
 		
 		drawPavement();
 		drawLeprechaun();
@@ -89,13 +89,13 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		batch.end();
 	}
 	
-	private void animateLeprechaun(float y_offset) {
-		leprechaun.y += y_offset;
+	private void animateLeprechaun(float x_offset) {
+		leprechaun.x += x_offset;
 		
-		if (leprechaun.y <= 0)
-			leprechaun.y = 0;
-		if (leprechaun.y + leprechaun.height >= pavement[pavement.length-1][0].y + pavement[pavement.length-1][0].height)
-			leprechaun.y = pavement[pavement.length-1][0].y + pavement[pavement.length-1][0].height - leprechaun.height;
+		if (leprechaun.x <= pavement[0][0].x)
+			leprechaun.x = pavement[0][0].x;
+		if (leprechaun.x + leprechaun.width >= pavement[0][pavement[0].length-1].x + pavement[0][pavement[0].length-1].width)
+			leprechaun.x = pavement[0][pavement[0].length-1].x + pavement[0][pavement[0].length-1].width - leprechaun.width;
 		
 	}
 	
@@ -107,34 +107,34 @@ public class DrunkenLeprechaun implements ApplicationListener {
 				leprechaun.height);
 	}
 	
-	private void animatePavement(float x_offset) {
-		float w = Gdx.graphics.getWidth();
+	private void animatePavement(float y_offset) {
+		float h = Gdx.graphics.getHeight();
 		
 		for (int y=0; y < pavement.length; y++) {
 			for (int x=0; x < pavement[y].length; x++) {
 				// Move pavement slabs
-				pavement[y][x].x += x_offset;
+				pavement[y][x].y += y_offset;
 				
-				//For right to left
-				if (x_offset < 0 && pavement[y][x].x + pavement[y][x].width <= 0) {
-					int x_max = 0;
-					for (int xx=0; xx <  pavement[y].length; xx++) {
-						if (pavement[y][x_max].x < pavement[y][xx].x)
-							x_max = xx;
+				// For walking forward
+				if (y_offset < 0 && pavement[y][x].y + pavement[y][x].height <= 0) {
+					int y_max = 0;
+					for (int yy=0; yy <  pavement.length; yy++) {
+						if (pavement[y_max][x].y < pavement[yy][x].y)
+							y_max = yy;
 					}
 					
-					pavement[y][x].x = pavement[y][x_max].x + pavement[y][x_max].width + (x == 0 ? -2 : 0);
+					pavement[y][x].y = pavement[y_max][x].y + pavement[y_max][x].height + (y == 0 ? -2 : 0);
 				}
 				
-				// For left to right
-				if (x_offset > 0 && pavement[y][x].x >= w) {
-					int x_min = 0;
-					for (int xx=0; xx <  pavement[y].length; xx++) {
-						if (pavement[y][x_min].x > pavement[y][xx].x)
-							x_min = xx;
+				// For walking backward
+				if (y_offset > 0 && pavement[y][x].y >= h) {
+					int y_min = 0;
+					for (int yy=0; yy < pavement.length; yy++) {
+						if (pavement[y_min][x].y > pavement[yy][x].y)
+							y_min = yy;
 					}
 					
-					pavement[y][x].x = pavement[y][x_min].x - pavement[y][x].width + (x == pavement[y].length-1 ? 0 : 2);
+					pavement[y][x].y = pavement[y_min][x].y - pavement[y][x].height + (y == pavement.length-1 ? 0 : 2);
 				}
 			}
 		}
