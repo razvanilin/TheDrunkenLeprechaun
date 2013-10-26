@@ -68,12 +68,15 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		
 		batch.begin();
 		
-		animate_pavement(-100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animatePavement(100 * Gdx.graphics.getDeltaTime());
+		
+		drawPavement();
 		
 		batch.end();
 	}
 	
-	private void animate_pavement(float x_offset) {
+	private void animatePavement(float x_offset) {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
@@ -81,7 +84,6 @@ public class DrunkenLeprechaun implements ApplicationListener {
 			for (int x=0; x < pavement[y].length; x++) {
 				// Move pavement slabs
 				pavement[y][x].x += x_offset;
-				
 				
 				//For right to left
 				if (x_offset < 0 && pavement[y][x].x + pavement[y][x].width <= 0) {
@@ -104,8 +106,13 @@ public class DrunkenLeprechaun implements ApplicationListener {
 					
 					pavement[y][x].x = pavement[y][x_min].x - pavement[y][x].width + (x == pavement[y].length-1 ? 0 : 2);
 				}
-				
-				
+			}
+		}
+	}
+	
+	private void drawPavement() {
+		for (int y=0; y < pavement.length; y++) {
+			for (int x=0; x < pavement[y].length; x++) {
 				// Render the pavement slabs
         		batch.draw(pavementTexture,
         				pavement[y][x].x,
