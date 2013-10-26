@@ -1,7 +1,5 @@
 package com.NapierDevSoc.TheDrunkenLeprechaun;
 
-import java.util.Date;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -167,7 +165,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 				pavement[y][x].y += y_offset;
 				
 				// For walking forward
-				if (y_offset < 0 && pavement[y][x].y + pavement[y][x].height <= 0) {
+				if (y_offset < 0 && pavement[y][x].y + pavement[y][x].height < 0) {
 					int y_max = 0;
 					for (int yy=0; yy <  pavement.length; yy++) {
 						if (pavement[y_max][x].y < pavement[yy][x].y)
@@ -178,7 +176,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 				}
 				
 				// For walking backward
-				if (y_offset > 0 && pavement[y][x].y >= h) {
+				if (y_offset > 0 && pavement[y][x].y > h) {
 					int y_min = 0;
 					for (int yy=0; yy < pavement.length; yy++) {
 						if (pavement[y_min][x].y > pavement[yy][x].y)
