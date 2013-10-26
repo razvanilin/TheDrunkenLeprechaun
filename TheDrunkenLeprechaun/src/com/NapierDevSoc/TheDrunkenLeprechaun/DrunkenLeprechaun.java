@@ -24,6 +24,22 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	private Rectangle leprechaun;
 	private Texture leprechaunTexture;
 	
+	private int[] leprechaunSpeed;
+	private int[] obstacleSpeed;
+	
+	private int level;
+	
+	public int currentLevel() {
+		return this.level;
+	}
+	public boolean nextLevel() {
+		if (this.level <= 6) {
+			this.level += 1;
+			return true;
+		}
+			return false;
+	}
+	
 	public Screen screen;
 	
 	private OrthographicCamera camera;
@@ -34,6 +50,12 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	public void create() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
+		
+		level = 1;
+		
+		// Speeds
+		leprechaunSpeed = new int[] {200, 100};
+		obstacleSpeed = new int[] {200, 100};
 		
 		// Pavement variables
 		int pavementSlabSize = 100;
@@ -81,8 +103,8 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) animatePavement(100 * Gdx.graphics.getDeltaTime());
 		if (Gdx.input.isKeyPressed(Keys.UP)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
 		
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) animateLeprechaun(-100 * Gdx.graphics.getDeltaTime());
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animateLeprechaun(100 * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) animateLeprechaun(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animateLeprechaun(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		
 		drawPavement();
 		drawLeprechaun();
