@@ -66,6 +66,8 @@ public class DrunkenLeprechaun implements ApplicationListener {
 
 	@Override
 	public void dispose() {
+		pavementTexture.dispose();
+		leprechaunTexture.dispose();
 	}
 
 	@Override
