@@ -41,22 +41,21 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
-
 		
 		
-		for (int i=0; i <= h/100; i++) {
+		for (int yy=0; yy <= h/100; yy++) {
 			ArrayList<Rectangle> pavementX = new ArrayList<Rectangle>();
 			
-			for (int ii=0; ii <= w/100; ii++) {
+			for (int xx=0; xx <= w/100; xx++) {
 				pavementSlab = new Rectangle();
 				pavementSlab.width = 100;
 				pavementSlab.height = 100;
-				pavementSlab.x = 100 * ii + (1*ii);
-				pavementSlab.y = 100 * i + (1*i);
+				pavementSlab.x = 100 * xx + (1 * xx);
+				pavementSlab.y = 100 * yy + (1 * yy);
 
-				pavementX.add(ii, pavementSlab);
+				pavementX.add(xx, pavementSlab);
 			}
-			pavement.add(i, pavementX);
+			pavement.add(yy, pavementX);
 		}
 		
 		
@@ -83,9 +82,13 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		shapeRenderer.begin(ShapeType.FilledRectangle);
         shapeRenderer.setColor(Color.RED);
         
-        for (int i=0; i<pavement.size(); i++) {
-        	for (int ii=0; ii<pavement.get(i).size(); ii++) {
-        		shapeRenderer.filledRect(pavement.get(i).get(ii).x, pavement.get(i).get(ii).y, pavement.get(i).get(ii).width, pavement.get(i).get(ii).height);
+        for (int yy=0; yy < pavement.size(); yy++) {
+        	for (int xx=0; xx < pavement.get(yy).size(); xx++) {
+        		shapeRenderer.filledRect(
+        				pavement.get(yy).get(xx).x,
+        				pavement.get(yy).get(xx).y,
+        				pavement.get(yy).get(xx).width,
+        				pavement.get(yy).get(xx).height);
         	}
         }
         
