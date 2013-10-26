@@ -43,15 +43,15 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		
 		
 		
-		for (int yy=0; yy <= h/100; yy++) {
+		for (int yy=0; yy < 3; yy++) {
 			ArrayList<Rectangle> pavementX = new ArrayList<Rectangle>();
 			
 			for (int xx=0; xx <= w/100; xx++) {
 				pavementSlab = new Rectangle();
 				pavementSlab.width = 100;
 				pavementSlab.height = 100;
-				pavementSlab.x = 100 * xx + (1 * xx);
-				pavementSlab.y = 100 * yy + (1 * yy);
+				pavementSlab.x = 100 * xx + xx;
+				pavementSlab.y = 100 * yy + yy;
 
 				pavementX.add(xx, pavementSlab);
 			}
@@ -84,6 +84,23 @@ public class DrunkenLeprechaun implements ApplicationListener {
         
         for (int yy=0; yy < pavement.size(); yy++) {
         	for (int xx=0; xx < pavement.get(yy).size(); xx++) {
+        		// Move pavement slabs left
+        		pavement.get(yy).get(xx).x -= 100 * Gdx.graphics.getDeltaTime();
+        		
+        		// If the fist slab is off the screen, change the x value to the end.
+        		if (pavement.get(yy).get(xx).x + pavement.get(yy).get(xx).width <= 0) {
+        			int max_x = 0;
+        			for (int xxx = 0; xxx < pavement.get(0).size(); xxx++) {
+        				if (pavement.get(yy).get(max_x).x < pavement.get(yy).get(xxx).x)
+        					max_x = xxx;
+        			}
+        			pavement.get(yy).get(xx).x = pavement.get(yy).get(max_x).x + 
+        										 pavement.get(yy).get(max_x).width +
+        										 (xx == 0 ? 0 : 1); // Because xx = 0 doesn't have an offset, don't add an offset here.  
+        			
+        		}
+        			
+        		// Render the pavement slabs
         		shapeRenderer.filledRect(
         				pavement.get(yy).get(xx).x,
         				pavement.get(yy).get(xx).y,
