@@ -114,13 +114,13 @@ public class DrunkenLeprechaun implements ApplicationListener {
                 RANDOM_MOVE_DIRECTION_SIDES = getRandomMovementDirection();
                 LAST_RANDOM_MOVE_TIME_SIDES = curentTime;
         } else
-                animateLeprechaun(RANDOM_MOVE_DIRECTION_SIDES * 100 * Gdx.graphics.getDeltaTime());
+                animateLeprechaun(RANDOM_MOVE_DIRECTION_SIDES * 50 * Gdx.graphics.getDeltaTime());
         
         if (LAST_RANDOM_MOVE_TIME_FORWAR_BACK < curentTime - DELAY_IN_MILI_FORWAR_BACK) {
                 RANDOM_MOVE_DIRECTION_FORWAR_BACK = getRandomMovementDirection();
                 LAST_RANDOM_MOVE_TIME_FORWAR_BACK = curentTime;
         } else
-                animatePavement(RANDOM_MOVE_DIRECTION_FORWAR_BACK * 100 * Gdx.graphics.getDeltaTime());
+                animatePavement(RANDOM_MOVE_DIRECTION_FORWAR_BACK * 50 * Gdx.graphics.getDeltaTime());
 		
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) animatePavement(100 * Gdx.graphics.getDeltaTime());
 		if (Gdx.input.isKeyPressed(Keys.UP)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
