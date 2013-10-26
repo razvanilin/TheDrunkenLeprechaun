@@ -1,5 +1,7 @@
 package com.NapierDevSoc.TheDrunkenLeprechaun;
 
+import java.util.Date;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -7,8 +9,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -29,22 +29,23 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	
+	private long DELAY_IN_MILI_SIDES = 200;
+	private long LAST_RANDOM_MOVE_TIME_SIDES = 0;
+	private long RANDOM_MOVE_DIRECTION_SIDES = 0;
 	
+	private long DELAY_IN_MILI_FORWAR_BACK = 300;
+	private long LAST_RANDOM_MOVE_TIME_FORWAR_BACK = 0;
+	private long RANDOM_MOVE_DIRECTION_FORWAR_BACK = 0;
 	@Override
 	public void create() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		
+		int pavementSlabSize = 100;
 		// Leprechaun Variable
-		leprechaun = new Rectangle();
-		leprechaun.width = 80;
-		leprechaun.height = 80;
-		leprechaun.x = 150 - leprechaun.width/2;
-		leprechaun.y = 150 - leprechaun.height/2;
-		leprechaunTexture = new Texture(Gdx.files.internal("data/Hat.png"));
+		
 		
 		// Pavement variables
-		int pavementSlabSize = 100;
+		
 		pavement = new Rectangle[(int) h/pavementSlabSize + 2][3];
 		pavementTexture = new Texture(Gdx.files.internal("data/sidewalk_block_128x128.png"));
 		
@@ -53,10 +54,17 @@ public class DrunkenLeprechaun implements ApplicationListener {
 				pavement[y][x] = new Rectangle();
 				pavement[y][x].width = pavementSlabSize;
 				pavement[y][x].height = pavementSlabSize;
-				pavement[y][x].x = pavementSlabSize * x;
+				pavement[y][x].x = w / 2 - (pavementSlabSize * pavement[y].length / 2) + pavementSlabSize * x;
 				pavement[y][x].y = pavementSlabSize * y;
 			}
 		}
+		
+		leprechaun = new Rectangle();
+		leprechaun.width = 80;
+		leprechaun.height = 80;
+		leprechaun.x = w / 2 - leprechaun.width/2;
+		leprechaun.y = 150 - leprechaun.height/2;
+		leprechaunTexture = new Texture(Gdx.files.internal("data/Hat.png"));
 		
 		camera = new OrthographicCamera(1, h/w);
 		
@@ -76,6 +84,24 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
+		
+		long curentTime = new Date().getTime();
+		
+		if(LAST_RANDOM_MOVE_TIME_SIDES < curentTime - DELAY_IN_MILI_SIDES){
+			RANDOM_MOVE_DIRECTION_SIDES = getRandomMovementDirection();
+			LAST_RANDOM_MOVE_TIME_SIDES = curentTime;
+		}
+		else{
+			animateLeprechaun(RANDOM_MOVE_DIRECTION_SIDES * 100 * Gdx.graphics.getDeltaTime());
+		}
+		
+		if(LAST_RANDOM_MOVE_TIME_FORWAR_BACK < curentTime - DELAY_IN_MILI_FORWAR_BACK){
+			RANDOM_MOVE_DIRECTION_FORWAR_BACK = getRandomMovementDirection();
+			LAST_RANDOM_MOVE_TIME_FORWAR_BACK = curentTime;
+		}
+		else{
+			animatePavement(RANDOM_MOVE_DIRECTION_FORWAR_BACK * 100 * Gdx.graphics.getDeltaTime());
+		}
 		
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) animatePavement(100 * Gdx.graphics.getDeltaTime());
 		if (Gdx.input.isKeyPressed(Keys.UP)) animatePavement(-100 * Gdx.graphics.getDeltaTime());
@@ -97,6 +123,12 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		if (leprechaun.x + leprechaun.width >= pavement[0][pavement[0].length-1].x + pavement[0][pavement[0].length-1].width)
 			leprechaun.x = pavement[0][pavement[0].length-1].x + pavement[0][pavement[0].length-1].width - leprechaun.width;
 		
+	}
+	
+	private int getRandomMovementDirection(){
+		int Min = -1;
+		int Max = 1;
+		return Min + (int)(Math.random() * ((Max - Min) + 1));
 	}
 	
 	private void drawLeprechaun() {
