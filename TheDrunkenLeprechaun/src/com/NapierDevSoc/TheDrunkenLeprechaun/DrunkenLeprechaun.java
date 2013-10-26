@@ -2,6 +2,7 @@ package com.NapierDevSoc.TheDrunkenLeprechaun;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -30,7 +31,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	private ShapeRenderer shapeRenderer;
 	
 	@Override
-	public void create() {		
+	public void create() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
@@ -52,7 +53,10 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	}
 
 	@Override
-	public void render() {		
+	public void render() {
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
@@ -64,6 +68,18 @@ public class DrunkenLeprechaun implements ApplicationListener {
         // Once we have a leprechaun image, the shapeRenderer can be replaced with the below.
 		//batch.draw(leprechaunImage, leprechaun.x, leprechaun.y);
 		batch.end();
+		
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) leprechaun.x -= 200 * Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) leprechaun.x += 200 * Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) leprechaun.y -= 200 * Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(Keys.UP)) leprechaun.y += 200 * Gdx.graphics.getDeltaTime();
+		
+		
+		leprechaun.x = (leprechaun.x < 0 ? 0 : leprechaun.x);
+		leprechaun.x = (leprechaun.x > w - leprechaun.width ? w - leprechaun.width : leprechaun.x);
+		leprechaun.y = (leprechaun.y < 0 ? 0 : leprechaun.y);
+		leprechaun.y = (leprechaun.y > h - leprechaun.height ? h - leprechaun.height : leprechaun.y);
+		
 	}
 
 	@Override
