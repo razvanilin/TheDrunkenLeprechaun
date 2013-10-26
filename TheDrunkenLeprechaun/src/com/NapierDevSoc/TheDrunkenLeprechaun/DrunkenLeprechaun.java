@@ -54,10 +54,6 @@ public class DrunkenLeprechaun implements ApplicationListener {
     private long DELAY_IN_MILI_FORWAR_BACK = 300;
     private long LAST_RANDOM_MOVE_TIME_FORWAR_BACK = 0;
     private long RANDOM_MOVE_DIRECTION_FORWAR_BACK = 0;
-	
-	private long DELAY_IN_MILI_FORWAR_BACK = 300;
-	private long LAST_RANDOM_MOVE_TIME_FORWAR_BACK = 0;
-	private long RANDOM_MOVE_DIRECTION_FORWAR_BACK = 0;
 	@Override
 	public void create() {
 		float w = Gdx.graphics.getWidth();
