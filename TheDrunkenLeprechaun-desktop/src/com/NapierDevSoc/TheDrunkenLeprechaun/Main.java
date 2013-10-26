@@ -11,6 +11,6 @@ public class Main {
 		cfg.width = 480;
 		cfg.height = 320;
 		
-		new LwjglApplication(new Drop(), cfg);
+		new LwjglApplication(new DrunkenLeprechaun(), cfg);
 	}
 }
