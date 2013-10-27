@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class DrunkenLeprechaun implements ApplicationListener {
+public class DrunkenLeprechaun implements Screen {
 	
 	public static final int GAME_STATE_PLAY = 0;
 	public static final int GAME_STATE_PAUSE = 1;
@@ -42,7 +42,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	
 	
 	@Override
-	public void create() {
+	public void show() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
@@ -69,7 +69,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	}
 
 	@Override
-	public void render() {
+	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 			
@@ -140,6 +140,11 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		if (drunkHorizontalPosition < -obstacleSpeed[level]/3)
 			drunkHorizontalDirection = 1;
 		return drunkHorizontalPosition;
+	}
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

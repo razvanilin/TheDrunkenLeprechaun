@@ -13,14 +13,10 @@ public class GrassSides {
 	private Texture[] sideTexture;
 	private Rectangle[] sideRectangle;
 	
-	private String sideType;
-	
 	public GrassSides(String sideType, float origin){
 		
 		sideRectangle = new Rectangle[4];
 		sideTexture = new Texture[4];
-
-		this.sideType = sideType;
 		
 		for (int i=0;i<sideRectangle.length;i++)
 		{
