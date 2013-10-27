@@ -22,6 +22,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	private Texture pavementTexture;
 	
 	private GrassSides grassSide;
+	private GrassSides streetSide;
 
 	
 	private Rectangle leprechaun;
@@ -61,24 +62,8 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		obstacleSpeed = new int[] {100, 110, 120, 130, 140, 150, 160};
 		
 		//grass side variables
-		grassSide = new GrassSides();
-		/*int grassWidth = 250;
-		int grassHeight = 480;
-		grassSide = new Rectangle[2];
-		
-		for (int i=0;i<grassSide.length;i++)
-		{
-			grassSide[i] = new Rectangle();
-			grassSide[i].width = grassWidth;
-			grassSide[i].height = grassHeight;
-			grassSide[i].x = 0;
-			grassSide[i].y = h;
-		}
-		
-		for (int i=0; i<grassSideTexture.length;i++)
-		{
-			grassSideTexture[i] = new Texture(Gdx.files.internal("data/sidesGrass"+i+".png"));
-		}*/
+		grassSide = new GrassSides("sidesGrass",0f);
+		streetSide = new GrassSides("street", Gdx.graphics.getWidth()-250);
 		
 		// Pavement variables
 		int pavementSlabSize = 80;
@@ -121,28 +106,33 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		batch.begin();
+
 			
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) 
-			{
-				animatePavement(100 * Gdx.graphics.getDeltaTime());
-				grassSide.animateGrass(100 * Gdx.graphics.getDeltaTime());
-			}
+		{
+			animatePavement(100 * Gdx.graphics.getDeltaTime());
+			grassSide.animate(100 * Gdx.graphics.getDeltaTime());
+			streetSide.animate(100 * Gdx.graphics.getDeltaTime());
+		}
 		if (Gdx.input.isKeyPressed(Keys.UP))
-			{
-				animatePavement(-100 * Gdx.graphics.getDeltaTime());
-				grassSide.animateGrass(-100 * Gdx.graphics.getDeltaTime());
-			}
-		
+		{
+			animatePavement(-100 * Gdx.graphics.getDeltaTime());
+			grassSide.animate(-100 * Gdx.graphics.getDeltaTime());
+			streetSide.animate(-100 * Gdx.graphics.getDeltaTime());
+		}
+
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) animateLeprechaun(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) animateLeprechaun(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		
-		grassSide.drawGrass(batch);
-		grassSide.animateGrass(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
-		
+		grassSide.animate(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
+		streetSide.animate(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
 		animateLeprechaun(drunkHorizontalMovement() * Gdx.graphics.getDeltaTime());
 		animatePavement(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
 		
+		batch.begin();
+		
+		grassSide.draw(batch);
+		streetSide.draw(batch);
 		drawPavement();
 		drawLeprechaun();
 		
