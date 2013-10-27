@@ -8,7 +8,7 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "The Drunken Leprechaun";
 		cfg.useGL20 = false;
-		cfg.width = 800;
+		cfg.width = 820;
 		cfg.height = 480;
 		
 		new LwjglApplication(new DrunkenLeprechaun(), cfg);
