@@ -9,8 +9,8 @@ public class Pavement {
 	
 	private Rectangle[][] pavement;
 	private Texture texture;
-	int pavementSlabSize;
-	float pavementOffset;
+	private int pavementSlabSize;
+	private float pavementOffset;
 	
 	public Pavement() {
 		float w = Gdx.graphics.getWidth();
@@ -81,6 +81,16 @@ public class Pavement {
         				pavement[y][x].height);
 			}
 		}
+	}
+	
+	public float getOffset()
+	{
+		return pavementOffset;
+	}
+	
+	public int getSlabSize()
+	{
+		return pavementSlabSize;
 	}
 	
 	public void textureDispose() {

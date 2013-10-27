@@ -11,6 +11,9 @@ public class Leprechaun {
 	private Texture texture;
 	private float x1, x2;
 	
+	public float x = 0f;
+	public float y = 0f;
+	
 	public Leprechaun(float x1, float x2, float y) {
 		this.x1 = x1;
 		this.x2 = x2;
@@ -21,8 +24,10 @@ public class Leprechaun {
 		leprechaun.x = x1 + (x2 - x1)/2 - leprechaun.width/2;
 		leprechaun.y = y - leprechaun.height/2;
 		texture = new Texture(Gdx.files.internal("data/Hat.png"));
+		
+		this.x = leprechaun.x;
+		this.y = leprechaun.y;
 	}
-	
 	
 	public void animate(float x_offset) {
 		leprechaun.x += x_offset;
@@ -32,6 +37,7 @@ public class Leprechaun {
 		if (leprechaun.x + leprechaun.width >= x2)
 			leprechaun.x = x2 - leprechaun.width;
 		
+		x = leprechaun.x;
 	}
 	
 	public void draw(SpriteBatch batch) {
