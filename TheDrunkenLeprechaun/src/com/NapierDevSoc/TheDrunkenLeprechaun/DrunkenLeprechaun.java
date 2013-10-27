@@ -17,6 +17,7 @@ public class DrunkenLeprechaun implements ApplicationListener {
 	private Leprechaun leprechaun;
 	private Pavement pavement;
 	private GrassSides grassSide;
+    private GrassSides streetSide;
 
 	public Screen screen;
 	
@@ -47,7 +48,8 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		
 		pavement = new Pavement();
 		leprechaun = new Leprechaun(pavement.getCoordinates()[0], pavement.getCoordinates()[1], 150);
-		grassSide = new GrassSides();
+        grassSide = new GrassSides("sidesGrass",0f);
+        streetSide = new GrassSides("street", Gdx.graphics.getWidth()-250);
 		
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
@@ -73,11 +75,13 @@ public class DrunkenLeprechaun implements ApplicationListener {
 			
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 			pavement.animate(100 * Gdx.graphics.getDeltaTime());
-			grassSide.animateGrass(100 * Gdx.graphics.getDeltaTime());
+			grassSide.animate(100 * Gdx.graphics.getDeltaTime());
+            streetSide.animate(100 * Gdx.graphics.getDeltaTime());
 		}
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			pavement.animate(-100 * Gdx.graphics.getDeltaTime());
-			grassSide.animateGrass(-100 * Gdx.graphics.getDeltaTime());
+			grassSide.animate(-100 * Gdx.graphics.getDeltaTime());
+            streetSide.animate(-100 * Gdx.graphics.getDeltaTime());
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) leprechaun.animate(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
@@ -86,13 +90,15 @@ public class DrunkenLeprechaun implements ApplicationListener {
 		
 		leprechaun.animate(drunkHorizontalMovement() * Gdx.graphics.getDeltaTime());
 		pavement.animate(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
-		grassSide.animateGrass(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
+		grassSide.animate(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
+        streetSide.animate(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
 		
 		
 		batch.begin();
 		
 		pavement.draw(batch);
-		grassSide.drawGrass(batch);
+        grassSide.draw(batch);
+        streetSide.draw(batch);
 		leprechaun.draw(batch);
 		
 		batch.end();

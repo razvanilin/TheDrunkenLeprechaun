@@ -34,7 +34,7 @@ public class Pavement {
 	}
 	
 	public float[] getCoordinates() {
-		return new float[] {pavement[0][0].x, pavement[0][pavement[0].length-1].x};
+		return new float[] {pavement[0][0].x, pavement[0][pavement[0].length-1].x + pavement[0][pavement[0].length-1].width};
 	}
 	
 	public void animate(float y_offset) {
