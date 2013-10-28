@@ -49,6 +49,7 @@ public class DrunkenLeprechaun implements Screen {
 	private Sound hit;
 	private Music gameOn;
 	private Sound destroy;
+	private Sound bottle;
 
 	private Game game;
 
@@ -109,6 +110,7 @@ public class DrunkenLeprechaun implements Screen {
 		gameOn.isLooping();
 		
 		destroy = Gdx.audio.newSound(Gdx.files.internal("data/destroy.mp3"));
+		bottle = Gdx.audio.newSound(Gdx.files.internal("data/bottle.wav"));
 	}
 
 	@Override
@@ -218,6 +220,7 @@ public class DrunkenLeprechaun implements Screen {
 				alcohol.bottles.remove(i);
 				i--;
 				pukePower += 100;
+				bottle.play();
 			}
 		}
 
