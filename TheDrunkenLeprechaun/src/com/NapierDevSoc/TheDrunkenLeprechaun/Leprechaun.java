@@ -29,6 +29,10 @@ public class Leprechaun {
 		this.y = leprechaun.y;
 	}
 	
+	public Rectangle getRectangle(){
+		return leprechaun;
+	}
+	
 	public void animate(float x_offset) {
 		leprechaun.x += x_offset;
 		

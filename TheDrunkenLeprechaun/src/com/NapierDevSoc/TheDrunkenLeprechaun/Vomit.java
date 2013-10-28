@@ -16,6 +16,10 @@ public class Vomit {
 		texture = new Texture(Gdx.files.internal("data/rainbow_vomit.png"));		
 	}
 	
+	public  ArrayList<Rectangle> getRactangles(){
+		return vomits;
+	}
+	
 	public void add(float LeprechaunX, float LeprechaunY, int size){
 		Rectangle newVomit = new Rectangle();
 		newVomit.width = (16 / 7 * (size + 1)) * 20;

@@ -11,7 +11,7 @@ public class Obstacles {
 	
 	private static final int SIZE = 80;
 	
-	private ArrayList<Rectangle> obstacles;
+	public ArrayList<Rectangle> obstacles;
 	private Texture texture;
 	
 	
@@ -22,13 +22,12 @@ public class Obstacles {
 	
 	public void add(float x, float y){
 		Rectangle newObstacle = new Rectangle();
-		newObstacle.width = SIZE;
-		newObstacle.height = SIZE;
-		newObstacle.x = x;
-		newObstacle.y = y;
+		newObstacle.width = SIZE - 20;
+		newObstacle.height = SIZE - 20;
+		newObstacle.x = x + 10;
+		newObstacle.y = y + 10;
 		
 		obstacles.add(newObstacle);//add new vomit at vomit start position
-		System.out.println("" + obstacles.size());
 	}
 	
 	public void animate(float y_offset) {
@@ -41,19 +40,11 @@ public class Obstacles {
 	public void draw(SpriteBatch batch) {
 		
 		for(int i = 0; i < obstacles.size(); i++){
-			//System.out.println(obstacles.get(i).x);
-			//System.out.println(obstacles.get(i).y);
-//			if(obstacles.get(i).y  < 0){
 				batch.draw(texture,
-						obstacles.get(i).x,
-						obstacles.get(i).y,
-						obstacles.get(i).width,
-						obstacles.get(i).height);
-//			}
-//			else{
-				//obstacles.remove(i);
-				//i--;
-//			}
+						obstacles.get(i).x - 10,
+						obstacles.get(i).y - 10,
+						obstacles.get(i).width + 20,
+						obstacles.get(i).height + 20);
 		}
 	}
 }

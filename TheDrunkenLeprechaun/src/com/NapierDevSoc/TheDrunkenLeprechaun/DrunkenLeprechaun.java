@@ -1,15 +1,16 @@
 package com.NapierDevSoc.TheDrunkenLeprechaun;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 public class DrunkenLeprechaun implements Screen {
 	
@@ -35,8 +36,18 @@ public class DrunkenLeprechaun implements Screen {
 	private Random rand;
 	private float current_time = 0f;
 	
-	private int level;
+	private int level = 0;
+	private int score;
+	private int lastScore;
+
+	private Game game;
 	
+	private int obstaclesCounter=0;
+
+	public DrunkenLeprechaun(Game game){
+		this.game = game;
+	}
+
 	public int getLevel() {
 		return this.level;
 	}
@@ -67,8 +78,7 @@ public class DrunkenLeprechaun implements Screen {
         rand = new Random();
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
-		
-		level = 0;
+
 		
 		// Speeds
 		leprechaunSpeed = new int[] {150, 140, 130, 120, 110, 100, 90};
@@ -88,8 +98,7 @@ public class DrunkenLeprechaun implements Screen {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		current_time += Gdx.graphics.getDeltaTime();
-		System.out.println(""+current_time);
-		if(current_time > 3.0f){
+		if(current_time > 1.5f){
 			current_time = 0f;//
 			// 
 			obstacles.add(
@@ -99,23 +108,25 @@ public class DrunkenLeprechaun implements Screen {
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			pavement.animate(100 * Gdx.graphics.getDeltaTime());
-			grassSide.animate(100 * Gdx.graphics.getDeltaTime());
-			streetSide.animate(100 * Gdx.graphics.getDeltaTime());
-			obstacles.animate(100 * Gdx.graphics.getDeltaTime());
+			pavement.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
+			grassSide.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
+			streetSide.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
+			obstacles.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		}
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			pavement.animate(-100 * Gdx.graphics.getDeltaTime());
-			grassSide.animate(-100 * Gdx.graphics.getDeltaTime());
-			streetSide.animate(-100 * Gdx.graphics.getDeltaTime());
-			obstacles.animate(-100 * Gdx.graphics.getDeltaTime());
+			pavement.animate(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
+			grassSide.animate(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
+			streetSide.animate(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
+			obstacles.animate(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		}
 
+		obstacles.animate(-leprechaunSpeed[level] / 2 * Gdx.graphics.getDeltaTime());
+		
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) leprechaun.animate(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) leprechaun.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 		
 		if (Gdx.input.isKeyPressed(Keys.SPACE)){
-			vomits.add(leprechaun.x, leprechaun.y, level);			
+			vomits.add(leprechaun.x, leprechaun.y, 0);			
 		}
 		
 		
@@ -128,6 +139,22 @@ public class DrunkenLeprechaun implements Screen {
 
 		obstacles.animate(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
 
+		ArrayList<Rectangle> listOfVomits = vomits.getRactangles();
+		
+		for(int i = 0; i < obstacles.obstacles.size(); i++){
+			
+			if(obstacles.obstacles.get(i).overlaps(leprechaun.getRectangle())){
+				game.setScreen(new GameOver(game));
+			}
+			for(Rectangle r2 : listOfVomits){
+				if( obstacles.obstacles.get(i).overlaps(r2)){
+					level();
+					obstacles.obstacles.remove(i);
+					i--;
+					break;
+				}
+			}
+		}
 
 		batch.begin();
 
@@ -178,6 +205,18 @@ public class DrunkenLeprechaun implements Screen {
 			drunkHorizontalDirection = 1;
 		return drunkHorizontalPosition;
 	}
+	
+	private void level()
+	{
+		score++;
+		System.out.println(""+score);
+		if (score == level+1 * level+1 + lastScore){
+			level++;
+			System.out.println("level="+level);
+			lastScore = score;
+		}
+	}
+	
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub

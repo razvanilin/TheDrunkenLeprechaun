@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class MainMenu implements Screen{
+public class GameOver implements Screen{
 	
 	private Stage stage;
 	private TextureAtlas atlas;
@@ -27,7 +27,7 @@ public class MainMenu implements Screen{
 	private Table table;
 	private TextButton buttonPlay, buttonExit;
 	private BitmapFont white, black;
-	private Label heading;
+	private Label heading, gameOver;
 	
 	private static float BUTTON_WIDTH = 400f;
 	
@@ -40,7 +40,7 @@ public class MainMenu implements Screen{
 	
 	private Game game;
 	
-	public MainMenu(Game game){
+	public GameOver(Game game){
 		this.game = game;
 	}
 	@Override
@@ -58,12 +58,10 @@ public class MainMenu implements Screen{
 		stage.act(delta);
 		stage.draw();
 	}
-
 	@Override
 	public void resize(int width, int height) {
 		
 	}
-
 	@Override
 	public void show() {
 		float w = Gdx.graphics.getWidth();
@@ -111,7 +109,7 @@ public class MainMenu implements Screen{
 		buttonExit.setWidth(BUTTON_WIDTH);
 		
 		//button play
-		buttonPlay = new TextButton("PLAY", textButtonStyle);
+		buttonPlay = new TextButton("PLAY AGAIN", textButtonStyle);
 		buttonPlay.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y){
@@ -123,11 +121,15 @@ public class MainMenu implements Screen{
 		
 		//making the heading
 		LabelStyle labelStyle = new LabelStyle(white, Color.WHITE);		
-		heading = new Label("The Drunken Leprechaun", labelStyle);		
+		heading = new Label("The Drunken Leprechaun", labelStyle);	
+		
+		gameOver = new Label("Game Over", labelStyle);
+		gameOver.scale(2);
 		
 		//adding the heading and the buttons to the table
-		table.add(heading);
-		table.getCell(heading).spaceBottom(100);
+		table.add(heading).spaceBottom(70);
+		table.row();
+		table.add(gameOver).spaceBottom(30);
 		table.row();
 		table.add(buttonPlay);
 		table.row();
@@ -139,25 +141,21 @@ public class MainMenu implements Screen{
 		
 		batch = new SpriteBatch();
 	}
-
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
@@ -167,5 +165,4 @@ public class MainMenu implements Screen{
 		white.dispose();
 		black.dispose();
 	}
-
 }
