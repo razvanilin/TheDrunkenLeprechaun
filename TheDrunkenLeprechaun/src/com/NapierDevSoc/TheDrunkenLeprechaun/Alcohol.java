@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Alcohol {
 
-	private static final int SIZE = 80;
+	private static final int SIZE = 40;
 
 	public ArrayList<Rectangle> bottles;
 	private Texture[] texture;

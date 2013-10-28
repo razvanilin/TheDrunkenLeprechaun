@@ -1,18 +1,15 @@
 package com.NapierDevSoc.TheDrunkenLeprechaun;
 
-import java.util.ArrayList;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class DrunkenLeprechaun implements Screen {
 	
@@ -42,14 +39,16 @@ public class DrunkenLeprechaun implements Screen {
 	private int score;
 	private int lastScore;
 	private int alcoholCounter = 0;
-	private int pukePower = 200;
-	
-	private int hitCounter;
+	private int pukePower = 100;
 	
 	private int[] leprechaunSpeed;
 	private int[] obstacleSpeed;
 	
 	private BitmapFont white;
+	
+	private Sound hit;
+	private Music gameOn;
+	private Sound destroy;
 
 	private Game game;
 
@@ -101,12 +100,22 @@ public class DrunkenLeprechaun implements Screen {
 			obstacleSpeed[i] = 100 + levelIncrease;
 		//obstacleSpeed = new int[] {100, 110, 120, 130, 140, 150, 160};
 		
+		//Sounds
+		hit = Gdx.audio.newSound(Gdx.files.internal("data/hit.mp3"));
+		
+		gameOn = Gdx.audio.newMusic(Gdx.files.internal("data/game.ogg"));
+		gameOn.setVolume(0.3f);
+		gameOn.play();
+		gameOn.isLooping();
+		
+		destroy = Gdx.audio.newSound(Gdx.files.internal("data/destroy.mp3"));
 	}
 
 	@Override
 	public void dispose() {
 		pavement.textureDispose();
 		leprechaun.textureDispose();
+		gameOn.dispose();
 	}
 
 	@Override
@@ -131,13 +140,14 @@ public class DrunkenLeprechaun implements Screen {
 					);
 		}
 		
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+		//Backward movement
+		/*if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 			pavement.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 			grassSide.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 			streetSide.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 			obstacles.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 			alcohol.animate(leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
-		}
+		}*/
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			pavement.animate(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
 			grassSide.animate(-leprechaunSpeed[level] * Gdx.graphics.getDeltaTime());
@@ -154,8 +164,11 @@ public class DrunkenLeprechaun implements Screen {
 		if (Gdx.input.isKeyPressed(Keys.SPACE)){
 			vomits.add(leprechaun.x, leprechaun.y, 0);
 			pukePower--;
-			if (pukePower == 0)
+			if (pukePower == 0){
 				game.setScreen(new GameOver(game));
+				gameOn.stop();
+				gameOn.dispose();
+			}
 		}
 		
 		
@@ -169,34 +182,42 @@ public class DrunkenLeprechaun implements Screen {
 
 		obstacles.animate(drunkVerticalMovement() * Gdx.graphics.getDeltaTime());
 
-		ArrayList<Rectangle> listOfVomits = vomits.getRactangles();
-		
-		hitCounter = 0;
 		for(int i = 0; i < obstacles.obstacles.size(); i++){
-			
+
 			if(obstacles.obstacles.get(i).overlaps(leprechaun.getRectangle())){
 				game.setScreen(new GameOver(game));
+				gameOn.stop();
+				gameOn.dispose();
 			}
-			for(Rectangle r2 : listOfVomits){
-				if( obstacles.obstacles.get(i).overlaps(r2)){
-					hitCounter++;
-					if (hitCounter > 10){
+			for(int j = 0; j < vomits.vomits.size(); j++){
+				if( obstacles.obstacles.get(i).overlaps(vomits.vomits.get(j))){
+					hit.play(1.0f);
+					System.out.println("i = " + i + " obstacles.lives = " + obstacles.lives);
+					int lives = obstacles.lives.get(i) - 1;
+					//System.out.println("lives = " + lives + " obstacles.lives.get(i) = " + obstacles.lives.get(i));
+					obstacles.lives.remove(i);
+					obstacles.lives.add(i, lives);
+					vomits.vomits.remove(j);
+					j--;
+					if (lives <= 0){
 						level();
 						alcoholCounter++;
 						obstacles.obstacles.remove(i);
+						obstacles.lives.remove(i);
+						destroy.play(1.0f);
 						i--;
 						break;
 					}
 				}
 			}
 		}
-		
+
 		for (int i = 0;i<alcohol.bottles.size();i++)
 		{
 			if (alcohol.bottles.get(i).overlaps(leprechaun.getRectangle())){
 				alcohol.bottles.remove(i);
 				i--;
-				pukePower = 200;
+				pukePower += 100;
 			}
 		}
 
@@ -209,9 +230,9 @@ public class DrunkenLeprechaun implements Screen {
 		obstacles.draw(batch);
 		alcohol.draw(batch);
 		vomits.draw(batch);
-		white.draw(batch, "Score: "+score, Gdx.graphics.getWidth()-200, Gdx.graphics.getHeight()-20);
-		white.draw(batch, "Level: "+level, Gdx.graphics.getWidth()-200, Gdx.graphics.getHeight()-60);
-		white.draw(batch, "Puke Power: "+pukePower, 100, Gdx.graphics.getHeight()-60);
+		white.draw(batch, "Score: "+score, 20, Gdx.graphics.getHeight()-20);
+		white.draw(batch, "Level: "+level, 20, Gdx.graphics.getHeight()-60);
+		white.draw(batch, "Alcohol Level: "+pukePower, 20, Gdx.graphics.getHeight()/3);
 		
 		batch.end();
 	}

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Vomit {
-	private ArrayList<Rectangle> vomits;
+	public ArrayList<Rectangle> vomits;
 	private Texture texture;
 	
 	public Vomit(){

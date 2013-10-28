@@ -3,9 +3,11 @@ package com.NapierDevSoc.TheDrunkenLeprechaun;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -38,6 +40,10 @@ public class GameOver implements Screen{
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	
+	private Texture logoTexture;
+	
+	private Sound intro;
+	
 	private Game game;
 	
 	public GameOver(Game game){
@@ -53,6 +59,8 @@ public class GameOver implements Screen{
 		pavement.draw(batch);
 		grassSide.draw(batch);
         streetSide.draw(batch);
+        batch.draw(logoTexture, Gdx.graphics.getWidth()/5, Gdx.graphics.getHeight()/2, 512, 256);
+
 		batch.end();
 		
 		stage.act(delta);
@@ -77,9 +85,16 @@ public class GameOver implements Screen{
 		
 		Gdx.input.setInputProcessor(stage);
 		
+		//load the sound
+		intro = Gdx.audio.newSound(Gdx.files.internal("data/intro1.mp3"));
+		intro.loop();
+		
 		//loading button.pack - forgot to make w and h with the power of 2s... dumb
 		atlas = new TextureAtlas("data/ui/button.pack");
 		skin = new Skin(atlas);
+		
+		//load the logo
+		logoTexture = new Texture(Gdx.files.internal("data/logo.png"));
 		
 		table = new Table();
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -114,6 +129,7 @@ public class GameOver implements Screen{
 			@Override
 			public void clicked(InputEvent event, float x, float y){
 				game.setScreen(new DrunkenLeprechaun(game));
+				intro.dispose();
 			}
 		});
 		buttonPlay.pad(20);
@@ -121,8 +137,7 @@ public class GameOver implements Screen{
 		
 		//making the heading
 		LabelStyle labelStyle = new LabelStyle(white, Color.WHITE);		
-		heading = new Label("The Drunken Leprechaun", labelStyle);	
-		
+		heading = new Label("", labelStyle);	
 		gameOver = new Label("Game Over", labelStyle);
 		gameOver.scale(2);
 		

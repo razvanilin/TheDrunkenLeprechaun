@@ -3,9 +3,11 @@ package com.NapierDevSoc.TheDrunkenLeprechaun;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -38,6 +40,10 @@ public class MainMenu implements Screen{
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	
+	private Texture logoTexture;
+	
+	private Sound intro;
+	
 	private Game game;
 	
 	public MainMenu(Game game){
@@ -50,9 +56,15 @@ public class MainMenu implements Screen{
 		
 		//Table.drawDebug(stage);
 		batch.begin();
+		
 		pavement.draw(batch);
 		grassSide.draw(batch);
         streetSide.draw(batch);
+        batch.draw(logoTexture, Gdx.graphics.getWidth()/5, Gdx.graphics.getHeight()/2, 512, 256);
+		white.draw(batch, "Watch your alcohol level!", Gdx.graphics.getWidth()/3-20, Gdx.graphics.getHeight()/5);
+		white.draw(batch, "Move forward to pick the bottles with alcohol", Gdx.graphics.getWidth()/4-40, Gdx.graphics.getHeight()/6-10);
+		white.draw(batch, "Press 'Space' to fire Rainbows!", Gdx.graphics.getWidth()/4-30, Gdx.graphics.getHeight()/7-30);
+
 		batch.end();
 		
 		stage.act(delta);
@@ -78,6 +90,13 @@ public class MainMenu implements Screen{
 		stage = new Stage();
 		
 		Gdx.input.setInputProcessor(stage);
+		
+		//load the music
+		intro = Gdx.audio.newSound(Gdx.files.internal("data/intro1.mp3"));
+		intro.loop();
+		
+		//load the logo
+		logoTexture = new Texture(Gdx.files.internal("data/logo.png"));
 		
 		//loading button.pack - forgot to make w and h with the power of 2s... dumb
 		atlas = new TextureAtlas("data/ui/button.pack");
@@ -115,6 +134,7 @@ public class MainMenu implements Screen{
 		buttonPlay.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y){
+				intro.dispose();
 				game.setScreen(new DrunkenLeprechaun(game));
 			}
 		});
@@ -123,7 +143,7 @@ public class MainMenu implements Screen{
 		
 		//making the heading
 		LabelStyle labelStyle = new LabelStyle(white, Color.WHITE);		
-		heading = new Label("The Drunken Leprechaun", labelStyle);		
+		heading = new Label("", labelStyle);		
 		
 		//adding the heading and the buttons to the table
 		table.add(heading);

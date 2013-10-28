@@ -11,13 +11,17 @@ public class Obstacles {
 	
 	private static final int SIZE = 80;
 	
+	private int numberOfLives = 10;
+	
 	public ArrayList<Rectangle> obstacles;
+	public ArrayList<Integer> lives;
 	private Texture texture;
 	
 	
 	public Obstacles(){
 		obstacles = new ArrayList<Rectangle>();
-		texture = new Texture(Gdx.files.internal("data/orc.png"));		
+		lives = new ArrayList<Integer>();
+		texture = new Texture(Gdx.files.internal("data/obstacle.png"));		
 	}
 	
 	public void add(float x, float y){
@@ -28,6 +32,7 @@ public class Obstacles {
 		newObstacle.y = y + 10;
 		
 		obstacles.add(newObstacle);//add new vomit at vomit start position
+		lives.add(numberOfLives);
 	}
 	
 	public void animate(float y_offset) {
