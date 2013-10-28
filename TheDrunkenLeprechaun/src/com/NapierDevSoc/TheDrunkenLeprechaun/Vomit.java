@@ -53,4 +53,9 @@ public class Vomit {
 			}
 		}
 	}
+	
+	public void remove(Rectangle object)
+	{
+		vomits.remove(object);
+	}
 }
